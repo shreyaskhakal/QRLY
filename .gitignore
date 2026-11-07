@@ -34,9 +34,9 @@ yarn-error.log*
 *.sw?
 
 # Print Agent outputs & state
+**/__pycache__/
+*.pyc
 print-agent/venv/
-print-agent/__pycache__/
-print-agent/*.pyc
 print-agent/work/
 print-agent/out/
 print-agent/state/
