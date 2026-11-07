@@ -105,6 +105,26 @@ QRLY enforces **Privacy by Default**:
 
 ---
 
+## 🚀 Production Deployment & Go-Live
+
+For complete production deployment instructions across Vercel, Supabase, Razorpay, and local hardware agents:
+- Refer to [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for step-by-step setup, environment variable checklists, and pre-flight criteria.
+
+---
+
+## 🧪 Automated Testing & Verification Suite
+
+- **TypeScript / Web App**: 62 unit and integration tests covering pricing, page parsing, magic bytes inspection, Razorpay signatures, RLS policies, rate limiting, owner dashboard controls, 20-order concurrent ingestion, and full E2E customer-to-print lifecycle.
+- **Python Hardware Agent**: 12 unit tests verifying Ghostscript grayscale conversion, qpdf slicing, SumatraPDF/CUPS dispatch, and dry-run output generation.
+
+```bash
+# Run complete test matrix
+npm run test
+cd print-agent && python -m unittest discover tests
+```
+
+---
+
 ## 📜 License
 MIT
 
