@@ -1,5 +1,9 @@
 # QRLY - Autonomous QR Print Kiosk
 
+[![CI Quality & Test Suite](https://github.com/shreyaskhakal/QRLY/actions/workflows/ci.yml/badge.svg)](https://github.com/shreyaskhakal/QRLY/actions/workflows/ci.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue.svg)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 > **Scan. Upload. Pay by UPI. Collect Prints.** Zero wait, zero staff intervention, and privacy by default.
 
 QRLY transforms any standard office or print shop printer into an autonomous self-service print kiosk. Customers scan a QR code on the printer, upload documents on mobile web, configure options, and pay via UPI (Razorpay). The shop's local print agent claims the job over outbound HTTPS and prints it automatically.
@@ -46,8 +50,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the homepage, or [ht
 
 ### 6. Run Test Suite
 ```bash
-# Run unit and integration tests (Vitest)
-npm run test
+# Run all unit, integration, and agent tests (Vitest + Python unittest)
+npm run test:all
 
 # Run TypeScript type check
 npm run typecheck
