@@ -1,0 +1,26 @@
+# ==============================================================================
+# Print Agent Configuration: QR Print Kiosk (QRLY)
+# ==============================================================================
+
+printer_name: "ShopPrinter"
+poll_interval_seconds: 3
+heartbeat_interval_seconds: 15
+print_timeout_seconds: 300
+
+# CUPS lp option mappings (Linux / macOS)
+cups_options:
+  color_mode_bw: "print-color-mode=monochrome"
+  color_mode_color: "print-color-mode=color"
+  duplex_long_edge: "sides=two-sided-long-edge"
+  simplex: "sides=one-sided"
+  quality_draft: "print-quality=3"
+  quality_normal: "print-quality=4"
+  quality_high: "print-quality=5"
+
+# SumatraPDF print-settings mappings (Windows)
+sumatra_options:
+  color_mode_bw: "monochrome"
+  color_mode_color: "color"
+  duplex_long_edge: "duplex"
+  simplex: "simplex"
+
