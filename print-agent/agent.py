@@ -136,6 +136,7 @@ def process_job(job: Dict[str, Any]):
     original_file = WORK_DIR / f"original-{job_id}.pdf"
     marker_file = STATE_DIR / f"printed-{job_id}"
     temp_files = [original_file]
+    job_failed = False
 
     try:
         # Step 2: Download file
@@ -169,6 +170,7 @@ def process_job(job: Dict[str, Any]):
         success, error_msg = dispatch_print(prepared_pdf, job_id, options)
 
         if not success:
+            job_failed = True
             print(f"[Agent] Spooler failure: {error_msg}")
             update_job_status(job_id, "failed", error_code="SPOOLER_ERROR", error_message=error_msg)
             return
@@ -176,6 +178,7 @@ def process_job(job: Dict[str, Any]):
         print(f"[Agent] Print successfully dispatched for Token {token_label}!")
 
     except Exception as e:
+        job_failed = True
         print(f"[Agent] Unexpected error processing job {job_id}: {e}")
         update_job_status(job_id, "failed", error_code="PROCESSING_ERROR", error_message=str(e))
 
@@ -190,9 +193,12 @@ def process_job(job: Dict[str, Any]):
             except Exception as del_err:
                 print(f"[Agent] Warning: Failed to unlink {tmp}: {del_err}")
 
-        # Final status report with localFileDeleted = True
-        update_job_status(job_id, "done", local_file_deleted=True)
-        print(f"[Agent] Job {job_id} finalized. Purged {deleted_count} local temp files.")
+        # Final status report with localFileDeleted = True only if successful
+        if not job_failed:
+            update_job_status(job_id, "done", local_file_deleted=True)
+            print(f"[Agent] Job {job_id} finalized as done. Purged {deleted_count} local temp files.")
+        else:
+            print(f"[Agent] Job {job_id} finalized as failed. Purged {deleted_count} local temp files.")
 
 
 def main():

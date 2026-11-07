@@ -70,6 +70,17 @@ export default function OrderStatusPage({
     return () => clearInterval(intervalId);
   }, [orderId]);
 
+  // Haptic celebration when print completes
+  useEffect(() => {
+    if (order?.status === "done" && typeof navigator !== "undefined" && navigator.vibrate) {
+      try {
+        navigator.vibrate([100, 50, 100]);
+      } catch {
+        // Browser vibration API supported only on mobile user gesture
+      }
+    }
+  }, [order?.status]);
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center p-6">
