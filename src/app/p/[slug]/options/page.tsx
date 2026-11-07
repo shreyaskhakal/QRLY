@@ -6,6 +6,8 @@ import { ArrowLeft, FileText, Minus, Plus } from "lucide-react";
 import { OptionToggleCard } from "@/components/customer/OptionToggleCard";
 import { PageRangeInput } from "@/components/customer/PageRangeInput";
 import { StickyPayBar } from "@/components/customer/StickyPayBar";
+import { LanguageToggle } from "@/components/customer/LanguageToggle";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import type { ColorMode, PrintQuality, PageSides } from "@/lib/types";
 
 interface FileOptionState {
@@ -28,6 +30,7 @@ export default function CustomerOptionsPage({
 }) {
   const { slug } = use(params);
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [orderId, setOrderId] = useState<string | null>(null);
   const [guestSecret, setGuestSecret] = useState<string | null>(null);
@@ -151,18 +154,22 @@ export default function CustomerOptionsPage({
     <div className="flex min-h-screen flex-col justify-between pb-24 sm:pb-8">
       <div className="p-4 sm:p-6 space-y-6">
         {/* Navigation Header */}
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => router.push(`/p/${slug}`)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <div>
-            <h1 className="text-lg font-bold text-slate-900">Print Options</h1>
-            <p className="text-xs text-slate-500">Configure settings for each file</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => router.push(`/p/${slug}`)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+              aria-label={t.common.back}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <div>
+              <h1 className="text-lg font-bold text-slate-900">{t.options.headerTitle}</h1>
+              <p className="text-xs text-slate-500">{t.options.headerSubtitle}</p>
+            </div>
           </div>
+          <LanguageToggle />
         </div>
 
         {/* Per-File Option Cards */}
@@ -193,7 +200,7 @@ export default function CustomerOptionsPage({
                     Rs {(file.pricePaise / 100).toFixed(2)}
                   </span>
                   {savingFileId === file.id && (
-                    <p className="text-[10px] text-blue-600 animate-pulse">updating...</p>
+                    <p className="text-[10px] text-blue-600 animate-pulse">{t.options.saving}</p>
                   )}
                 </div>
               </div>
@@ -201,7 +208,7 @@ export default function CustomerOptionsPage({
               {/* Option 1: Color Mode */}
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Color Mode
+                  {t.options.colorMode}
                 </label>
                 <OptionToggleCard
                   selectedMode={file.colorMode}
@@ -237,8 +244,8 @@ export default function CustomerOptionsPage({
               {/* Option 3: Copies Stepper */}
               <div className="flex items-center justify-between border-t border-slate-100 pt-3">
                 <div>
-                  <span className="text-sm font-semibold text-slate-800">Copies</span>
-                  <p className="text-[11px] text-slate-500">Number of print sets (1-50)</p>
+                  <span className="text-sm font-semibold text-slate-800">{t.options.copies}</span>
+                  <p className="text-[11px] text-slate-500">1 - 50</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -274,7 +281,7 @@ export default function CustomerOptionsPage({
               {/* Option 4: Page Range Selection */}
               <div className="border-t border-slate-100 pt-3 space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Page Selection
+                  {t.options.pageRange}
                 </label>
                 <PageRangeInput
                   totalPages={file.pageCount}
@@ -288,8 +295,8 @@ export default function CustomerOptionsPage({
               {/* Option 5: Sides (Single vs Double) */}
               <div className="border-t border-slate-100 pt-3 flex items-center justify-between">
                 <div>
-                  <span className="text-sm font-semibold text-slate-800">Print Sides</span>
-                  <p className="text-[11px] text-slate-500">Same per-page rate</p>
+                  <span className="text-sm font-semibold text-slate-800">{t.options.sides}</span>
+                  <p className="text-[11px] text-slate-500">{file.sides === "double" ? t.options.doubleSided : t.options.singleSided}</p>
                 </div>
                 <div className="flex rounded-lg border border-slate-200 p-0.5 bg-slate-50">
                   <button
@@ -301,7 +308,7 @@ export default function CustomerOptionsPage({
                         : "text-slate-500"
                     }`}
                   >
-                    Single
+                    {t.options.singleSided}
                   </button>
                   <button
                     type="button"
@@ -312,7 +319,7 @@ export default function CustomerOptionsPage({
                         : "text-slate-500"
                     }`}
                   >
-                    Double
+                    {t.options.doubleSided}
                   </button>
                 </div>
               </div>
@@ -324,7 +331,7 @@ export default function CustomerOptionsPage({
       {/* Sticky Bottom Review Bar */}
       <StickyPayBar
         totalPaise={orderTotalPaise}
-        buttonLabel="Review Order"
+        buttonLabel={t.options.reviewAndPay}
         onClick={() => router.push(`/p/${slug}/review`)}
         isLoading={Boolean(savingFileId)}
       />

@@ -6,6 +6,8 @@ import { UploadCloud, AlertCircle, ShieldCheck } from "lucide-react";
 import { PrinterStatusBadge } from "@/components/customer/PrinterStatusBadge";
 import { FileCard } from "@/components/customer/FileCard";
 import { StickyPayBar } from "@/components/customer/StickyPayBar";
+import { LanguageToggle } from "@/components/customer/LanguageToggle";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface ShopInfo {
   id: string;
@@ -38,6 +40,7 @@ export default function CustomerUploadPage({
   const { slug } = use(params);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLanguage();
 
   const [shop, setShop] = useState<ShopInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -83,7 +86,7 @@ export default function CustomerUploadPage({
         .then((data) => {
           if (data?.order?.files) {
             setFiles(
-              data.order.files.map((f: any) => ({
+              data.order.files.map((f: { id: string; originalName: string; pageCount: number }) => ({
                 id: f.id,
                 name: f.originalName,
                 sizeBytes: 1024 * 1024,
@@ -268,7 +271,7 @@ export default function CustomerUploadPage({
       <div className="flex min-h-screen items-center justify-center p-6">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-3 border-blue-600 border-t-transparent" />
-          <p className="text-sm text-slate-500 font-medium">Connecting to print kiosk...</p>
+          <p className="text-sm text-slate-500 font-medium">{t.common.loading}</p>
         </div>
       </div>
     );
@@ -281,8 +284,9 @@ export default function CustomerUploadPage({
         <header className="space-y-2 border-b border-slate-100 pb-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold tracking-tight text-slate-900">
-              {shop?.name ?? "Print Kiosk"}
+              {shop?.name ?? t.common.kiosk}
             </h1>
+            <LanguageToggle />
           </div>
 
           {shop && (
@@ -299,9 +303,9 @@ export default function CustomerUploadPage({
             <div className="flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-rose-600 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-sm">Printer is currently unavailable</p>
+                <p className="font-semibold text-sm">{t.upload.printerUnavailable}</p>
                 <p className="text-xs text-rose-700 mt-1">
-                  This printer is not accepting jobs right now. Please tell the shop staff.
+                  {t.upload.printerUnavailableDesc}
                 </p>
               </div>
             </div>
@@ -342,10 +346,10 @@ export default function CustomerUploadPage({
                 <UploadCloud className="h-6 w-6" />
               </div>
               <span className="font-semibold text-sm text-slate-900">
-                Choose Files to Print
+                {t.upload.chooseFiles}
               </span>
               <span className="text-xs text-slate-500 mt-0.5">
-                PDF, JPG, PNG (Max 5 files, up to 25 MB each)
+                {t.upload.supportedFormats}
               </span>
             </button>
           </div>
@@ -355,7 +359,7 @@ export default function CustomerUploadPage({
         {files.length > 0 && (
           <div className="space-y-3">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Uploaded Documents ({files.length}/5)
+              {t.upload.uploadedDocuments} ({files.length}/5)
             </h2>
             <div className="space-y-2.5">
               {files.map((file) => (
@@ -377,7 +381,7 @@ export default function CustomerUploadPage({
         {/* Privacy Note */}
         <div className="flex items-center gap-2 rounded-xl bg-slate-100/70 p-3 text-xs text-slate-600">
           <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-          <span>Your files are deleted right after printing.</span>
+          <span>{t.common.privacyNotice}</span>
         </div>
       </div>
 
@@ -385,11 +389,11 @@ export default function CustomerUploadPage({
       {files.length > 0 && !isPrinterOffline && (
         <StickyPayBar
           totalPaise={orderTotalPaise}
-          buttonLabel="Configure Options"
+          buttonLabel={t.upload.configureOptions}
           onClick={() => router.push(`/p/${slug}/options`)}
           disabled={files.some((f) => f.isUploading)}
           disabledReason={
-            files.some((f) => f.isUploading) ? "Please wait for uploads to complete" : undefined
+            files.some((f) => f.isUploading) ? t.upload.waitUploads : undefined
           }
         />
       )}

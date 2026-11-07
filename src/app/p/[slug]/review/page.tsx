@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { ArrowLeft, ShieldCheck, FileText, Sparkles } from "lucide-react";
 import { StickyPayBar } from "@/components/customer/StickyPayBar";
+import { LanguageToggle } from "@/components/customer/LanguageToggle";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import type { ColorMode, PrintQuality, PageSides } from "@/lib/types";
 
 interface ReviewFileItem {
@@ -27,6 +29,7 @@ export default function CustomerReviewPage({
 }) {
   const { slug } = use(params);
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [orderId, setOrderId] = useState<string | null>(null);
   const [guestSecret, setGuestSecret] = useState<string | null>(null);
@@ -204,18 +207,22 @@ export default function CustomerReviewPage({
       <div className="flex min-h-screen flex-col justify-between pb-28 sm:pb-8">
         <div className="p-4 sm:p-6 space-y-6">
           {/* Navigation Header */}
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => router.push(`/p/${slug}/options`)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </button>
-            <div>
-              <h1 className="text-lg font-bold text-slate-900">Review & Pay</h1>
-              <p className="text-xs text-slate-500">{shopName}</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => router.push(`/p/${slug}/options`)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+                aria-label={t.common.back}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+              <div>
+                <h1 className="text-lg font-bold text-slate-900">{t.options.reviewAndPay}</h1>
+                <p className="text-xs text-slate-500">{shopName}</p>
+              </div>
             </div>
+            <LanguageToggle />
           </div>
 
           {/* Error Banner */}
@@ -275,7 +282,7 @@ export default function CustomerReviewPage({
                 <span>Rs 0.00 (Free)</span>
               </div>
               <div className="flex justify-between font-bold text-slate-900 text-base pt-2 border-t border-slate-100">
-                <span>Order Total</span>
+                <span>{t.review.totalToPay}</span>
                 <span className="text-blue-600">Rs {totalRs}</span>
               </div>
             </div>
@@ -285,10 +292,10 @@ export default function CustomerReviewPage({
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4 space-y-2">
             <div className="flex items-center gap-2 text-emerald-800 font-semibold text-xs">
               <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span>Privacy Guaranteed</span>
+              <span>{t.status.privacyTitle}</span>
             </div>
             <p className="text-xs text-emerald-700 leading-relaxed">
-              Your uploaded files are encrypted and permanently deleted from all cloud servers immediately after printing is complete.
+              {t.common.privacyNotice}
             </p>
           </div>
 
@@ -323,7 +330,7 @@ export default function CustomerReviewPage({
         {/* Sticky Bottom Pay Bar */}
         <StickyPayBar
           totalPaise={totalPaise}
-          buttonLabel={`Pay Rs ${totalRs}`}
+          buttonLabel={`${t.review.payWithUpi} • Rs ${totalRs}`}
           onClick={handleProceedToPay}
           isLoading={paying}
         />

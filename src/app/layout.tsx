@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,9 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen bg-slate-50 text-slate-900 antialiased">
-        <main className="mx-auto min-h-screen max-w-md bg-white shadow-sm sm:border-x sm:border-slate-200">
-          {children}
-        </main>
+        <LanguageProvider>
+          <main className="mx-auto min-h-screen max-w-md bg-white shadow-sm sm:border-x sm:border-slate-200">
+            {children}
+          </main>
+        </LanguageProvider>
       </body>
     </html>
   );

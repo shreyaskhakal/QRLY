@@ -53,3 +53,4 @@ jobs:
           RAZORPAY_KEY_SECRET: rzp_sec_dummy
           RAZORPAY_WEBHOOK_SECRET: rzp_whsec_dummy
           CRON_SECRET: cron_sec_dummy
+

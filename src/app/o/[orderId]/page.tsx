@@ -3,6 +3,8 @@
 import React, { useState, useEffect, use } from "react";
 import { CheckCircle2, Clock, Printer, ShieldCheck, AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { LanguageToggle } from "@/components/customer/LanguageToggle";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import type { OrderStatus } from "@/lib/types";
 
 interface OrderDetail {
@@ -33,6 +35,7 @@ export default function OrderStatusPage({
   params: Promise<{ orderId: string }>;
 }) {
   const { orderId } = use(params);
+  const { t } = useLanguage();
 
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -128,20 +131,23 @@ export default function OrderStatusPage({
             <h1 className="text-base font-bold text-slate-900">{order.shopName}</h1>
             <p className="text-[11px] text-slate-500">Self-Service Print Kiosk</p>
           </div>
-          {order.shopSlug && (
-            <Link
-              href={`/p/${order.shopSlug}`}
-              className="text-xs font-semibold text-blue-600 hover:text-blue-700"
-            >
-              New Order
-            </Link>
-          )}
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            {order.shopSlug && (
+              <Link
+                href={`/p/${order.shopSlug}`}
+                className="text-xs font-semibold text-blue-600 hover:text-blue-700 ml-1"
+              >
+                +
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* Token Card */}
         <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-6 text-center shadow-xs">
           <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
-            Your Order Token
+            {t.status.orderToken}
           </p>
           <div className="my-2">
             <span className="text-4xl font-black tracking-tight text-blue-900">
@@ -150,13 +156,13 @@ export default function OrderStatusPage({
           </div>
           <p className="text-xs text-blue-700">
             {isDone
-              ? "🎉 Collect your printed pages from the output tray"
+              ? `🎉 ${t.status.completedDesc}`
               : isPrinting
-              ? "🖨️ Pages are printing now at the kiosk"
+              ? `🖨️ ${t.status.printingDesc}`
               : isQueued
-              ? `Position ${order.queuePosition} in queue`
+              ? `${t.status.queuePosition}: ${order.queuePosition} ${t.status.aheadOfYou}`
               : isAwaitingPayment
-              ? "Complete UPI payment to begin printing"
+              ? t.review.payWithUpi
               : "Status: " + order.status}
           </p>
         </div>
@@ -237,17 +243,17 @@ export default function OrderStatusPage({
               <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-4 space-y-1.5 shadow-xs">
                 <div className="flex items-center gap-2 text-emerald-900 font-bold text-sm">
                   <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0" />
-                  <span>Your files have been deleted from our servers</span>
+                  <span>{t.status.privacyTitle}</span>
                 </div>
                 <p className="text-xs text-emerald-800">
-                  Confirmed deleted at {deletionTime || "just now"}. We keep only your order number and the amount paid.
+                  {t.status.filesPurged} {deletionTime || "just now"}.
                 </p>
               </div>
             ) : (
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 flex items-center gap-3">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-600 border-t-transparent" />
                 <p className="text-xs text-slate-600 font-medium">
-                  Printing done. Deleting your files from our servers...
+                  {t.status.filesPurgedShort}...
                 </p>
               </div>
             )}
