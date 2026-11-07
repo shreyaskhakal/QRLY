@@ -139,3 +139,4 @@ The print agent runs as a zero-inbound daemon on a Raspberry Pi or Windows compu
 | 7 | **Crash Recovery** | Marker `state/printed-<id>` prevents duplicate prints if agent restarts mid-job | Verified |
 | 8 | **Sweeper Watchdog** | Sweeper cleans up stuck or expired orders every 5 minutes | Verified |
 | 9 | **Test Suite Gate** | 12 Vitest suites (62 tests) + 12 Python agent tests passing with 0 failures | Verified |
+

@@ -9,7 +9,10 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:agent": "cd print-agent && python -m unittest discover tests",
+    "test:all": "npm run test && cd print-agent && python -m unittest discover tests",
+    "probe:printer": "cd print-agent && python probe.py"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
